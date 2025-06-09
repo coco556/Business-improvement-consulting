@@ -1,48 +1,48 @@
-// モバイルメニューの制御
+// モバイルメニューの切り替え
 document.addEventListener("DOMContentLoaded", () => {
-  const mobileMenuBtn = document.getElementById("mobileMenuBtn")
-  const mobileNav = document.getElementById("mobileNav")
-  const menuIcon = document.getElementById("menuIcon")
+  // Feather Iconsの初期化
+  feather.replace()
 
-  let isMenuOpen = false
+  const menuToggle = document.getElementById("menu-toggle")
+  const mobileNav = document.getElementById("mobile-nav")
+  const menuIcon = document.getElementById("menu-icon")
 
-  mobileMenuBtn.addEventListener("click", () => {
-    isMenuOpen = !isMenuOpen
+  if (menuToggle && mobileNav && menuIcon) {
+    menuToggle.addEventListener("click", () => {
+      mobileNav.classList.toggle("active")
 
-    if (isMenuOpen) {
-      mobileNav.classList.add("active")
-      menuIcon.className = "fas fa-times"
-    } else {
-      mobileNav.classList.remove("active")
-      menuIcon.className = "fas fa-bars"
-    }
-  })
+      if (mobileNav.classList.contains("active")) {
+        menuIcon.setAttribute("data-feather", "x")
+      } else {
+        menuIcon.setAttribute("data-feather", "menu")
+      }
 
-  // モバイルメニューのリンクをクリックしたときにメニューを閉じる
-  const mobileLinks = document.querySelectorAll(".nav-mobile-link")
-  mobileLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      isMenuOpen = false
-      mobileNav.classList.remove("active")
-      menuIcon.className = "fas fa-bars"
+      feather.replace()
     })
-  })
+
+    // モバイルメニューのリンクをクリックしたらメニューを閉じる
+    const mobileNavLinks = mobileNav.querySelectorAll("a")
+    mobileNavLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        mobileNav.classList.remove("active")
+        menuIcon.setAttribute("data-feather", "menu")
+        feather.replace()
+      })
+    })
+  }
 
   // スムーズスクロール
-  const anchorLinks = document.querySelectorAll('a[href^="#"]')
-  anchorLinks.forEach((link) => {
-    link.addEventListener("click", function (e) {
-      const href = this.getAttribute("href")
-      if (href === "#") return
-
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
       e.preventDefault()
-      const target = document.querySelector(href)
-      if (target) {
-        const headerHeight = document.querySelector(".header").offsetHeight
-        const targetPosition = target.offsetTop - headerHeight
 
+      const targetId = this.getAttribute("href")
+      if (targetId === "#") return
+
+      const targetElement = document.querySelector(targetId)
+      if (targetElement) {
         window.scrollTo({
-          top: targetPosition,
+          top: targetElement.offsetTop - 80, // ヘッダーの高さを考慮
           behavior: "smooth",
         })
       }
